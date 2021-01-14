@@ -1,0 +1,24 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`Primer test para componentes Debe retornar OK 1`] = `
+<Fragment>
+  <h1>
+    GifExpertApp
+  </h1>
+  <AddCategory
+    categories={
+      Array [
+        "Dragon Ball Z",
+      ]
+    }
+    setCategories={[Function]}
+  />
+  <hr />
+  <ol>
+    <GifGrid
+      category="Dragon Ball Z"
+      key="Dragon Ball Z"
+    />
+  </ol>
+</Fragment>
+`;
