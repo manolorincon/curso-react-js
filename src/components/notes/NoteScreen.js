@@ -24,7 +24,6 @@ export const NoteScreen = () => {
         
     }, [note, reset]);
 
-
     useEffect(() => {
 
         dispatch( activeNote( formValues.id, {...formValues} ) );
