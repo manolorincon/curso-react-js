@@ -30,7 +30,10 @@ export const LoginScreen = () => {
         <>
             <h3 className="auth__title">Login</h3>
 
-            <form>
+            <form 
+                onSubmit={handleLogin}
+                className="animate__animated animate__fadeIn animate__faster"
+            >
 
                 <input 
                     type="text"
@@ -55,7 +58,6 @@ export const LoginScreen = () => {
                 <button
                     type="submit"
                     className="btn btn-primary btn-block"
-                    onClick={handleLogin}
                     disabled={ loading }
                 >
                     Login
