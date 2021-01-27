@@ -1,8 +1,19 @@
 import configureStore from 'redux-mock-store' //ES6 modules
 import thunk from 'redux-thunk';
-import { startLoadingNotes, startNewNote, startSaveNote } from '../../actions/notes';
+import { startLoadingNotes, startNewNote, startSaveNote, startUploading } from '../../actions/notes';
 import { db } from '../../firebase/firebase-config';
+import { fileUpload } from '../../helpers/fileUpload';
 import { types } from '../../types/types';
+
+jest.mock('../../helpers/fileUpload', () => ({
+    fileUpload: jest.fn( () => {
+        return 'https://hola-mundo.com/cosa.jpg';
+        /**
+         * También podríamos manejarlo como una promesa
+         * return Promise.resolve('https://holamundo.com/hola.jpg');
+         */
+    })
+}))
 
 const middlewares = [thunk];
 const mockStore = configureStore(middlewares); // => funcion que permite crear un store
@@ -10,6 +21,13 @@ const mockStore = configureStore(middlewares); // => funcion que permite crear u
 const initState = {
     auth: {
         uid: 'TESTING',
+    },
+    notes: {
+        active: {
+            id: '2EiC9rzpbXU7sE9krWNx',
+            title: 'hola',
+            body: 'mundo'
+        }
     }
 }
 
@@ -92,27 +110,40 @@ describe('Pruebas con las acciones de notes', () => {
 
     test('startSaveNote debe de actualizar la nota', async() => {
         
-        const note = {
-            id: '2EiC9rzpbXU7sE9krWNx',
-            title: 'titulo',
-            body: 'body'
-        }
+        // const note = {
+        //     id: '2EiC9rzpbXU7sE9krWNx',
+        //     title: 'titulo',
+        //     body: 'body'
+        // }
 
-        await store.dispatch( startSaveNote( note ) );
+        // await store.dispatch( startSaveNote( note ) );
 
-        const actions = store.getActions();
-        //console.log(actions);
-        //console.log(actions[0].payload.note );
+        // const actions = store.getActions();
+        // //console.log(actions);
+        // //console.log(actions[0].payload.note );
 
-        expect( actions[0].type ).toBe( types.notesUpdated );
-        expect( actions[0].payload.note.title ).toBe( 'titulo' );
+        // expect( actions[0].type ).toBe( types.notesUpdated );
+        // expect( actions[0].payload.note.title ).toBe( 'titulo' );
 
-        const docRef = await db.doc(`TESTING/journal/notes/2EiC9rzpbXU7sE9krWNx`).get();
-        console.log(docRef);
+        // const docRef = await db.doc(`TESTING/journal/notes/2EiC9rzpbXU7sE9krWNx`).get();
+        // console.log(docRef);
 
-        //expect( docRef.data().title ).toBe( note.title );
+        // //expect( docRef.data().title ).toBe( note.title );
 
     })
+
+    test('startUploading debe actualizar el url del entry', async () => {
+
+        const file = new File([], 'foto.jpg');
+        console.log(file);
+        await store.dispatch(startUploading(file));
+
+        console.log(store); 
+
+        const docRef = await db.doc('/TESTING/journal/notes/2EiC9rzpbXU7sE9krWNx').get();
+        expect( docRef.data().url ).toBe('https://holamundo.com/hola.jpg');
+    })
+    
     
     
     

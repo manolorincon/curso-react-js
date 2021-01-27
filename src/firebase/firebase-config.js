@@ -34,11 +34,7 @@ const firebaseConfig = {
     };
 */
 
-
 firebase.initializeApp(firebaseConfig);
-
-console.log(firebaseConfig);
-
 
 //referencia a mi base de datos
 const db = firebase.firestore();
