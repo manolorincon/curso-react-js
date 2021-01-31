@@ -1,7 +1,6 @@
 const { response } = require('express');
 const Evento = require('../models/Eventos');
 
-
 const getEventos = async (req, res = response) => {
 
     const eventos = await Evento.find()
