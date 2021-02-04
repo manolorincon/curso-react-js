@@ -1,12 +1,11 @@
 import React from 'react'
-import { useDispatch, useSelector } from 'react-redux';
+import { useDispatch } from 'react-redux';
 import Swal from 'sweetalert2';
-import { eventClearActiveEvent, eventDeleted } from '../actions/events';
+import { eventClearActiveEvent, eventStartDelete } from '../actions/events';
 
 export const DeleteEventFab = () => {
 
     const dispatch = useDispatch();
-    const { activeEvent } = useSelector( state => state.calendar );
     
     const handleDelete = () => {
 
@@ -20,7 +19,7 @@ export const DeleteEventFab = () => {
         confirmButtonText: 'Eliminar'
     }).then((result) => {
         if (result.isConfirmed) {
-            dispatch( eventDeleted(activeEvent.id) );
+            dispatch( eventStartDelete() );
             dispatch( eventClearActiveEvent() );
             Swal.fire(
             'Eliminado!',
