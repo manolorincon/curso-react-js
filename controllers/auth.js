@@ -87,6 +87,8 @@ const loginUsuario = async (req, res = response) => {
 }
 
 const revalidarToken = async (req, res = response) => {
+
+    console.log('entro revalidarToken');
     
     const { uid, name } = req;
 
