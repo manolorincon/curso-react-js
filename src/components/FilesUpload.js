@@ -20,52 +20,55 @@ export const FilesUpload = () => {
         });
     }
 
-    const getBase64 = async () => {
+    const fileListToBase64 = async ( files ) => {
+       
+        const promises = []
 
-        const { files } = state;
-
-        let reader = new FileReader();
-
-        for await (let file of files) {
-
-            reader.readAsDataURL(file);
-            reader.onload = () => {
-                let archivo = reader.result;
-                console.log('llena array');
-                data.archivos.push({
-                    'archivo': archivo
-                })
-            };
-            reader.onerror = (error) => {
-                console.log('Error: ', error);
-                return false;
-            };
-
+        const getBase64File = (file) => {
+            return new Promise(resolve => {
+                const reader = new FileReader()
+                reader.onload = () => {
+                    let archivo = reader.result;
+                    console.log('llena array');
+                    resolve (data.archivos.push({
+                        'archivo': archivo
+                    }))
+                };
+                reader.readAsDataURL(file)
+            })
         }
 
-        return true;
+        for (let i = 0; i < files.length; i++) {
+            promises.push(getBase64File(files[i]))
+        }
 
+        return await Promise.all(promises)
 
     }
     
     const handleUpload = async (e) => {
 
-        const filesToBase64 = await getBase64();
-
-        if( filesToBase64 ){
-
-            setTimeout(() => {
-                console.log('ejecuta fetch');
-                fetch('http://localhost:4000/api/archivos/cargarArchivo', {
-                    method: 'POST',
-                    headers: {
-                        'Content-type': 'application/json'
-                    },
-                    body: JSON.stringify( data )
-                });
-            }, 1000);
-
+        
+        const { files } = state;
+        
+        data = {
+            archivos: []
         }
+        
+        await fileListToBase64(files);
+
+        const resp = await fetch('http://localhost:4000/api/archivos/cargarArchivo', {
+            method: 'POST',
+            headers: {
+                'Content-type': 'application/json'
+            },
+            body: JSON.stringify( data )
+        });
+
+        const texto = await resp.json()
+
+        console.log(texto);
+
 
     }
 
